@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "524262012216",
+    "firebase_url": "https://mobv-app-55ee7.firebaseio.com",
+    "project_id": "mobv-app-55ee7",
+    "storage_bucket": "mobv-app-55ee7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524262012216:android:15f715970b212b34",
+        "android_client_info": {
+          "package_name": "boo.foo.org.mobvapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "524262012216-898483msoiomp3prrlvev476vpnmdsf2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "boo.foo.org.mobvapp",
+            "certificate_hash": "8f7acc2aa104c176ff489f83da673143347713a4"
+          }
+        },
+        {
+          "client_id": "524262012216-0so7l1c6ck1tessk7gftqmko8184lofg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4mJP_s6OaJ2Ibnnnv6rCk9lWCiEHopXI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "524262012216-0so7l1c6ck1tessk7gftqmko8184lofg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
