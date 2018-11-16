@@ -1,15 +1,25 @@
 package boo.foo.org.mobvapp;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
+
+import boo.foo.org.mobvapp.models.Post;
+import boo.foo.org.mobvapp.models.User;
+import boo.foo.org.mobvapp.services.UserService;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MY TAG";
+    private UserService userService;
+
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,14 +28,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        userService = new UserService();
+
+        String userName = "peter";
+        login(userName);
+
+    }
+
+    private void login(String username) {
+        userService.login(username,
+                (u) -> {
+                    Log.w(TAG, "Great success");
+                    return null;
+                }, (message) -> {
+                    Log.w(TAG, "Fail");
+                    return null;
+                }
+        );
     }
 
     @Override
