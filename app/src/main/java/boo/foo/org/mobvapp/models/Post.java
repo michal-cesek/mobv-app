@@ -1,4 +1,4 @@
-package boo.foo.org.mobvapp.model;
+package boo.foo.org.mobvapp.models;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;

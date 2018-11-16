@@ -8,22 +8,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import boo.foo.org.mobvapp.model.Post;
-import boo.foo.org.mobvapp.model.User;
+
+import boo.foo.org.mobvapp.models.Post;
+import boo.foo.org.mobvapp.models.User;
+import boo.foo.org.mobvapp.services.UserService;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MY TAG";
-    private FirebaseFirestore db;
+    private UserService userService;
 
     private User user;
 
@@ -34,62 +28,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        db = FirebaseFirestore.getInstance();
+        userService = new UserService();
 
-        login();
-
-
+        String userName = "peter";
+        login(userName);
 
     }
 
-    private void addPost(final Post post){
-
-        db.collection(Post.collectionName)
-                .add(post)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        post.withId(documentReference.getId());
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
-
-    private void login() {
-
-        db.collection(User.collectionName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                user = document.toObject(User.class)
-                                        .withId(document.getId());
-
-                                Post post = new Post();
-                                post.setUserid(user.getId());
-                                post.setUsername(user.getUsername());
-                                post.setType("image");
-                                post.setImageurl("https://picsum.photos/g/1600/1600?image=123");
-
-                                addPost(post);
-
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
-
+    private void login(String username) {
+        userService.login(username,
+                (u) -> {
+                    Log.w(TAG, "Great success");
+                    return null;
+                }, (message) -> {
+                    Log.w(TAG, "Fail");
+                    return null;
+                }
+        );
     }
 
     @Override

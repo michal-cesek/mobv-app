@@ -1,4 +1,4 @@
-package boo.foo.org.mobvapp.model;
+package boo.foo.org.mobvapp.models;
 
 import android.support.annotation.NonNull;
 
