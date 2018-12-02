@@ -14,7 +14,6 @@ import boo.foo.org.mobvapp.services.UserService;
 
 public class ProfileActivity extends AppCompatActivity {
 
-
     private UserService userService;
     private PostsService postsService;
 
@@ -36,14 +35,14 @@ public class ProfileActivity extends AppCompatActivity {
         tv_registred = findViewById(R.id.tv_registred);
         tv_post_count = findViewById(R.id.tv_post_count);
 
-        userService = new UserService();
+        userService = new UserService(this);
         postsService = new PostsService();
 
-        //todo
-        String userName = "peter";
-        //todo move to more appropriate lifecycle method
-        login(userName);
+        User user = userService.getCurrentUser();
 
+        tv_username.setText(user.getUsername());
+        tv_registred.setText(user.getDate().toDate().toString());
+//        tv_post_count.setText(user.getNumberOfPosts());
 
     }
 
@@ -71,30 +70,4 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    private void login(String username) {
-        userService.login(username,
-                (u) -> {
-                    if (u == null) {
-                        //user not found
-                        pb.setVisibility(View.INVISIBLE);
-                        return null;
-                    }
-
-                    tv_username.setText(u.getUsername());
-                    tv_registred.setText(u.getDate().toString());
-                    //todo
-                    tv_post_count.setText("posts: " + u.getNumberOfPosts());
-
-                    onLoginSuccess(u);
-
-                    pb.setVisibility(View.INVISIBLE);
-                    ll.setVisibility(View.VISIBLE);
-                    return null;
-                }, (err) -> {
-                    pb.setVisibility(View.INVISIBLE);
-                    //todo show error
-                    return null;
-                }
-        );
-    }
 }

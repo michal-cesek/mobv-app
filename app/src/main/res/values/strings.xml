@@ -1,4 +1,25 @@
 <resources>
     <string name="app_name">Mobv app</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Nastavenia</string>
+    <string name="title_activity_login">Prihlásenie</string>
+    <!-- Strings related to login -->
+    <string name="prompt_username">Meno</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Heslo</string>
+    <string name="prompt_password_repeat">Opakovať Heslo</string>
+    <string name="action_sign_in">Prihlásiť sa</string>
+    <string name="action_sign_in_u"><u>Prihlásiť sa</u></string>
+    <string name="action_sign_out">Odhlásiť sa</string>
+    <string name="action_register">Registrovať sa</string>
+    <string name="action_register_u"><u>Registrovať sa</u></string>
+    <string name="error_invalid_username">Neplatná meno</string>
+    <string name="error_invalid_email">Neplatná emilova adresa</string>
+    <string name="error_invalid_password">Heslo je krátke</string>
+    <string name="error_incorrect_password">Nesprávne heslo</string>
+    <string name="error_field_required">Pole je povinné</string>
+    <string name="error_password_dont_match">Heslá sa nezhodujú</string>
+    <string name="acion_add_image">Pridať obrázok</string>
+    <string name="acion_add_video">Pridať video</string>
+    <string name="title_activity_main">Domov</string>
+    <string name="title_activity_profile">Profil</string>
 </resources>
