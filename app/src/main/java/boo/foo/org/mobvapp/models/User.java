@@ -10,6 +10,7 @@ public class User extends Model {
 
     private String username;
     //"datetime of registered"
+    @ServerTimestamp
     private Timestamp date;
     private Integer numberOfPosts;
 
@@ -46,5 +47,10 @@ public class User extends Model {
 
     public void setNumberOfPosts(Integer numberOfPosts) {
         this.numberOfPosts = numberOfPosts;
+    }
+
+    @Override
+    public String toString() {
+        return "User: " + getId() + " " + getUsername() + " " + getDate() + " " + getNumberOfPosts();
     }
 }

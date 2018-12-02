@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_add_image"
+        android:icon="@drawable/baseline_add_photo_alternate_white_48dp"
+        android:title="@string/acion_add_image" />
+
+    <item
+        android:id="@+id/action_add_video"
+        android:icon="@drawable/baseline_video_call_white_48dp"
+        android:title="@string/acion_add_video" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:icon="@drawable/baseline_power_settings_new_white_48dp"
+        android:title="@string/action_sign_out" />
+</menu>

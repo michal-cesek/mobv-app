@@ -1,71 +1,70 @@
 package boo.foo.org.mobvapp;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
+import com.leinardi.android.speeddial.SpeedDialView;
 
-
-import boo.foo.org.mobvapp.models.Post;
 import boo.foo.org.mobvapp.models.User;
 import boo.foo.org.mobvapp.services.UserService;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MY TAG";
+    private static final String TAG = "MainActivity:";
     private UserService userService;
 
-    private User user;
+    @Override
+    public void onStart() {
+        super.onStart();
+        User user = userService.getCurrentUser();
+
+        //get all users with embedded posts
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        userService = new UserService();
-
-        String userName = "peter";
-        login(userName);
-
-    }
-
-    private void login(String username) {
-        userService.login(username,
-                (u) -> {
-                    Log.w(TAG, "Great success");
-                    return null;
-                }, (message) -> {
-                    Log.w(TAG, "Fail");
-                    return null;
-                }
-        );
+        setSpeedDialMenu();
+        userService = new UserService(this);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void onBackPressed() {
+        return;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    private void setSpeedDialMenu(){
+        SpeedDialView speedDialView = findViewById(R.id.speedDial);
+        speedDialView.inflate(R.menu.menu_speed_dial);
+        speedDialView.setOnActionSelectedListener(speedDialActionItem -> {
+            switch (speedDialActionItem.getId()) {
+                case R.id.action_logout:
+                    logout();
+                    return true;
+                case R.id.action_add_video:
+                    //TODO
+                    return true;
+                case R.id.action_add_image:
+                    //TODO
+                    return true;
+                default:
+                    return false;
+            }
+        });
     }
+
+    public void logout() {
+        userService.logout();
+        goToLoginScreen();
+    }
+
+    public void goToLoginScreen(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
 }
