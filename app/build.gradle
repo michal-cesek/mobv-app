@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
+
 
 android {
     compileSdkVersion 28
@@ -37,6 +39,7 @@ dependencies {
     implementation "com.leinardi.android:speed-dial:2.0.0"
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.erikagtierrez.multiple_media_picker:multiple-media-picker:1.0.5'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
 }
 
 apply plugin: 'com.google.gms.google-services'
