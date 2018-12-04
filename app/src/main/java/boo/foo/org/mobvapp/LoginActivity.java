@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import boo.foo.org.mobvapp.models.User;
 import boo.foo.org.mobvapp.services.UserService;
@@ -59,6 +60,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        TextView tvVersionName = findViewById(R.id.tv_app_version);
+        tvVersionName.setText(BuildConfig.VERSION_NAME);
 
         userService = new UserService(this);
 
