@@ -2,6 +2,8 @@ package boo.foo.org.mobvapp.models;
 
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.ServerTimestamp;
+
 
 
 public class User extends Model {
