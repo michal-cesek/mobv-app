@@ -13,11 +13,40 @@ import java.util.function.Function;
 import boo.foo.org.mobvapp.models.Post;
 
 public class PostsService {
+    private final String TAG = "PostService:";
 
     private FirebaseFirestore db;
 
     public PostsService() {
         db = FirebaseFirestore.getInstance();
+    }
+
+    public void getAllPosts(
+            Function<List<Post>, Object> onResolved,
+            Function<String, Void> onFail
+    ) {
+        db.collection(Post.collectionName)
+                .orderBy("date")
+                .limit(100)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        //todo refactor
+                        ArrayList<Post> posts = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            posts.add(
+                                    document.toObject(Post.class).withId(document.getId())
+                            );
+                        }
+                        Log.d(TAG, "PostService getAllPosts: no. of posts " + posts.size());
+                        onResolved.apply(posts);
+
+                    } else {
+                        Log.w(TAG, "PostService getAllPosts: fail " + task.getException());
+                        onFail.apply(task.getException().toString());
+                    }
+                });
+
     }
 
     public void getPosts(
