@@ -4,6 +4,7 @@ package boo.foo.org.mobvapp.services;
 import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -21,12 +22,13 @@ public class PostsService {
         db = FirebaseFirestore.getInstance();
     }
 
+
     public void getAllPosts(
             Function<List<Post>, Object> onResolved,
             Function<String, Void> onFail
     ) {
         db.collection(Post.collectionName)
-                .orderBy("date")
+                .orderBy("date", Query.Direction.DESCENDING)
                 .limit(100)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -38,15 +40,14 @@ public class PostsService {
                                     document.toObject(Post.class).withId(document.getId())
                             );
                         }
-                        Log.d(TAG, "PostService getAllPosts: no. of posts " + posts.size());
+                        Log.d(TAG, "getAllPosts count:" + posts.size());
                         onResolved.apply(posts);
 
                     } else {
-                        Log.w(TAG, "PostService getAllPosts: fail " + task.getException());
+                        Log.w(TAG, "getAllPosts fail", task.getException());
                         onFail.apply(task.getException().toString());
                     }
                 });
-
     }
 
     public void getPosts(
