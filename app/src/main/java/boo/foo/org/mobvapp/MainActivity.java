@@ -11,14 +11,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.erikagtierrez.multiple_media_picker.Gallery;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import boo.foo.org.mobvapp.models.Post;
 import boo.foo.org.mobvapp.models.User;
+import boo.foo.org.mobvapp.services.MediaUploaderService;
 import boo.foo.org.mobvapp.services.PostsService;
 import boo.foo.org.mobvapp.services.UserService;
 
@@ -27,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private UserService userService;
     private PostsService postsService;
+    private MediaUploaderService uploaderService;
 
     private List<Post> posts;
     private ProgressBar pbMain;
@@ -35,8 +40,14 @@ public class MainActivity extends AppCompatActivity {
     static final int OPEN_IMAGE_PICKER = 123;
     static final int OPEN_VIDEO_PICKER = 124;
 
+    static final int CONFIRM_POST_CREATION = 456;
+
+
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 12345;
     private boolean storagePermissionsGranted = false;
+
+    private final List<String> supportedImageTypes = Arrays.asList("image/jpeg", "image/png");
+    private final List<String> supportedVideoTypes = Arrays.asList("video/mp4");
 
     @Override
     public void onStart() {
@@ -68,11 +79,35 @@ public class MainActivity extends AppCompatActivity {
 
         userService = new UserService(this);
         postsService = new PostsService();
+        uploaderService = new MediaUploaderService(
+                getString(R.string.upload_service_path)
+        );
     }
 
     public void onPostImageSelect(String filePath) {
-        //TODO
-        Log.d(TAG, "onPostImageSelect ");
+        Log.d(TAG, "onPostImageSelect " + filePath);
+
+        if (Utils.checkIfIsSupportedFileType(filePath, supportedImageTypes)) {
+            File file = new File(filePath);
+
+            uploaderService.upload(this, "upfile", file,
+                    fileUrl -> {
+                        Log.d(TAG, "onPostImageSelect upload success " + fileUrl);
+                        return null;
+                    },
+                    err -> {
+                        Log.d(TAG, "onPostImageSelect upload fail ");
+                        return null;
+                    }
+            );
+
+        } else {
+            Toast.makeText(this, getString(R.string.error_not_supported_file_type),
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+
     }
 
     public void onPostVideoSelect(String filePath) {
@@ -102,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
             case OPEN_IMAGE_PICKER: {
                 if (resultCode == RESULT_OK && data != null) {
                     String filePath = data.getStringArrayListExtra("result").get(0);
-                    Log.d(TAG, "File picked " + filePath);
                     onPostImageSelect(filePath);
                 }
                 //TODO toas some error
@@ -111,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
             case OPEN_VIDEO_PICKER: {
                 if (resultCode == RESULT_OK && data != null) {
                     String filePath = data.getStringArrayListExtra("result").get(0);
-                    Log.d(TAG, "File picked " + filePath);
                     onPostVideoSelect(filePath);
                 }
             }

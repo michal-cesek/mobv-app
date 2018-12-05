@@ -18,8 +18,10 @@
     <string name="error_incorrect_password">Nesprávne heslo</string>
     <string name="error_field_required">Pole je povinné</string>
     <string name="error_password_dont_match">Heslá sa nezhodujú</string>
+    <string name="error_not_supported_file_type">Nepodorovaný typ súboru</string>
     <string name="acion_add_image">Pridať obrázok</string>
     <string name="acion_add_video">Pridať video</string>
     <string name="title_activity_main">Domov</string>
     <string name="title_activity_profile">Profil</string>
+    <string name="upload_service_path">http://mobv.mcomputing.eu/upload/index.php</string>
 </resources>
