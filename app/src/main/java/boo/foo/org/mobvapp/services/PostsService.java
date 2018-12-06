@@ -1,12 +1,14 @@
 package boo.foo.org.mobvapp.services;
 
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -17,9 +19,62 @@ public class PostsService {
     private final String TAG = "PostService:";
 
     private FirebaseFirestore db;
+    private UserService userservice;
+    private MediaUploaderService uploaderService;
 
     public PostsService() {
         db = FirebaseFirestore.getInstance();
+        uploaderService = new MediaUploaderService();
+
+    }
+
+    //TODO increase number of post in user profile
+    public void addPost(
+            Activity activity,
+            File file,
+            Post post,
+            Function<Post, Object> onResolved,
+            Function<String, Void> onFail
+    ) {
+
+        if (!post.getType().equals("image") && !post.getType().equals("video")) {
+            onFail.apply("Post type must be set to image|video");
+            return;
+        }
+
+        uploaderService.upload(activity, "upfile", file,
+                fileUrl -> {
+                    Log.d(TAG, "addPost upload success " + fileUrl);
+
+                    if (post.getType().equals("image")) {
+                        post.setImageurl(fileUrl);
+                    } else {
+                        post.setVideourl(fileUrl);
+                    }
+
+                    db.collection(Post.collectionName)
+                            .add(post)
+                            .addOnSuccessListener(documentReference -> {
+                                post.setId(documentReference.getId());
+                                //TODO id of post is set but date (created) not
+                                // needed posts refresh ?!
+                                Log.d(TAG, "addPost successful id: " + post.getId());
+                                onResolved.apply(post);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.w(TAG, "addPost fail", e);
+                                onFail.apply(e.getMessage());
+                            });
+
+                    return null;
+                },
+                err -> {
+                    Log.d(TAG, "addPost upload fail " + err);
+                    onFail.apply(err);
+                    return null;
+                }
+        );
+
     }
 
 
@@ -77,26 +132,6 @@ public class PostsService {
                 });
 
     }
-
-//
-//    private void addPost( Post post) {
-//
-//        db.collection(Post.collectionName)
-//                .add(post)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        post.withId(documentReference.getId());
-//                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error adding document", e);
-//                    }
-//                });
-//    }
 
 
 }

@@ -21,8 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import boo.foo.org.mobvapp.models.Post;
-import boo.foo.org.mobvapp.models.User;
-import boo.foo.org.mobvapp.services.MediaUploaderService;
 import boo.foo.org.mobvapp.services.PostsService;
 import boo.foo.org.mobvapp.services.UserService;
 
@@ -31,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     private UserService userService;
     private PostsService postsService;
-    private MediaUploaderService uploaderService;
 
     private List<Post> posts;
     private ProgressBar pbMain;
@@ -39,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     static final int OPEN_IMAGE_PICKER = 123;
     static final int OPEN_VIDEO_PICKER = 124;
-
-    static final int CONFIRM_POST_CREATION = 456;
 
 
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 12345;
@@ -52,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        User user = userService.getCurrentUser();
         storagePermissionsGranted = permissionsGranted();
 
         postsService.getAllPosts(
@@ -79,8 +73,30 @@ public class MainActivity extends AppCompatActivity {
 
         userService = new UserService(this);
         postsService = new PostsService();
-        uploaderService = new MediaUploaderService(
-                getString(R.string.upload_service_path)
+    }
+
+    public void persistPost(File file, Post newPost) {
+        postsService.addPost(this, file, newPost,
+                post -> {
+                    Log.d(TAG, "onPostImageSelect add successful " + post.getId());
+                    pbMain.setVisibility(View.INVISIBLE);
+
+                    //todo should be hidden
+                    userService.increaseUserPostsNumber();
+
+                    Toast.makeText(this, getString(R.string.toast_post_add_success),
+                            Toast.LENGTH_LONG)
+                            .show();
+                    return null;
+                },
+                err -> {
+                    Log.d(TAG, "onPostImageSelect add fail");
+                    pbMain.setVisibility(View.INVISIBLE);
+                    Toast.makeText(this, getString(R.string.toast_post_add_fail),
+                            Toast.LENGTH_LONG)
+                            .show();
+                    return null;
+                }
         );
     }
 
@@ -90,29 +106,40 @@ public class MainActivity extends AppCompatActivity {
         if (Utils.checkIfIsSupportedFileType(filePath, supportedImageTypes)) {
             File file = new File(filePath);
 
-            uploaderService.upload(this, "upfile", file,
-                    fileUrl -> {
-                        Log.d(TAG, "onPostImageSelect upload success " + fileUrl);
-                        return null;
-                    },
-                    err -> {
-                        Log.d(TAG, "onPostImageSelect upload fail ");
-                        return null;
-                    }
-            );
+            Post newPost = new Post();
+            newPost.setType("image");
+            newPost.setUserid(userService.getCurrentUser().getId());
+            newPost.setUsername(userService.getCurrentUser().getUsername());
+
+            pbMain.setVisibility(View.VISIBLE);
+            persistPost(file, newPost);
 
         } else {
             Toast.makeText(this, getString(R.string.error_not_supported_file_type),
                     Toast.LENGTH_SHORT)
                     .show();
         }
-
-
     }
 
     public void onPostVideoSelect(String filePath) {
-        //TODO
-        Log.d(TAG, "onPostVideoSelect ");
+        Log.d(TAG, "onPostVideoSelect " + filePath);
+
+        if (Utils.checkIfIsSupportedFileType(filePath, supportedVideoTypes)) {
+            File file = new File(filePath);
+
+            Post newPost = new Post();
+            newPost.setType("video");
+            newPost.setUserid(userService.getCurrentUser().getId());
+            newPost.setUsername(userService.getCurrentUser().getUsername());
+
+            pbMain.setVisibility(View.VISIBLE);
+            persistPost(file, newPost);
+
+        } else {
+            Toast.makeText(this, getString(R.string.error_not_supported_file_type),
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
 
@@ -226,6 +253,10 @@ public class MainActivity extends AppCompatActivity {
             switch (speedDialActionItem.getId()) {
                 case R.id.action_logout:
                     logout();
+                    return false;
+                case R.id.action_show_profile:
+                    Intent intent = new Intent(this, ProfileActivity.class);
+                    startActivity(intent);
                     return false;
                 case R.id.action_add_video:
                     tryOpenMediaPicker(3, OPEN_VIDEO_PICKER);

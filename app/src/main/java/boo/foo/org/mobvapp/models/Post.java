@@ -1,13 +1,17 @@
 package boo.foo.org.mobvapp.models;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.type.Date;
 
-public class Post extends Model {
-
+public class Post {
     public static String collectionName = "posts";
 
+    @Exclude
+    public String id;
     private String userid;
     private String username;
     @ServerTimestamp
@@ -28,6 +32,20 @@ public class Post extends Model {
         this.type = type;
         this.videourl = videourl;
         this.imageurl = imageurl;
+    }
+
+    @Exclude
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public <T extends Post> T withId(@NonNull final String id) {
+        this.id = id;
+        return (T) this;
     }
 
     public String getUserid() {
