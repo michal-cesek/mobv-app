@@ -2,6 +2,7 @@ package boo.foo.org.mobvapp.services;
 
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -21,11 +22,12 @@ import boo.foo.org.mobvapp.Utils;
 
 
 public class MediaUploaderService {
+    private final String TAG = "MediaUploaderService:";
 
     private final String servicePath;
 
-    public MediaUploaderService(String servicePath) {
-        this.servicePath = servicePath;
+    public MediaUploaderService() {
+        this.servicePath = "http://mobv.mcomputing.eu/upload/index.php";
     }
 
     public void upload(
@@ -37,6 +39,7 @@ public class MediaUploaderService {
     ) {
         String mime = Utils.getMimeType(file.getAbsolutePath());
         if (mime == null) {
+            Log.d(TAG, "upload fail - corrupted file");
             onFail.apply("Corrupted file");
             return;
         }
@@ -58,22 +61,29 @@ public class MediaUploaderService {
 
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    activity.runOnUiThread(() -> onFail.apply("OkHTTP client error"));
+                    activity.runOnUiThread(() -> {
+                        Log.d(TAG, "upload fail httpok onFailure", e);
+                        onFail.apply("OkHTTP client error");
+                    });
                 }
 
                 @Override
                 public void onResponse(Response response) {
                     activity.runOnUiThread(() -> {
                         try {
-                            if (response.isSuccessful() && response.message().equals("OK")) {
-                                String jsonStr = response.body().string();
-                                JsonObject jsonObj = new JsonParser().parse(jsonStr).getAsJsonObject();
+                            String jsonStr = response.body().string();
+                            JsonObject jsonObj = new JsonParser().parse(jsonStr).getAsJsonObject();
+
+                            if (response.isSuccessful() && jsonObj.get("status").getAsString().equals("ok")) {
                                 String url = Utils.getMediaFileUrl(jsonObj.get("message").getAsString());
+                                Log.d(TAG, "upload success httpok onResponse " + url + " " + jsonStr);
                                 onResolved.apply(url);
                             } else {
+                                Log.d(TAG, "upload fail httpok onResponse - not successful " + jsonStr);
                                 onFail.apply("OkHTTP client error");
                             }
                         } catch (IOException ioe) {
+                            Log.d(TAG, "upload fail httpok onResponse - IOException");
                             onFail.apply("OkHTTP client error");
 
                         }
@@ -83,6 +93,7 @@ public class MediaUploaderService {
             });
 
         } catch (Exception ex) {
+            Log.d(TAG, "upload fail httpok Exception catched");
             onFail.apply("OkHTTP client error");
         }
     }

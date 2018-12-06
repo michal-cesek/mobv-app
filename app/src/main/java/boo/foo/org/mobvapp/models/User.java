@@ -5,11 +5,10 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;
 
 
-
-public class User extends Model {
-
+public class User {
     public static String collectionName = "users";
 
+    public String id;
     private String username;
     //"datetime of registered"
     @ServerTimestamp
@@ -24,6 +23,14 @@ public class User extends Model {
         this.username = username;
         this.date = date;
         this.numberOfPosts = numberOfPosts;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {

@@ -4,16 +4,22 @@
     <item
         android:id="@+id/action_logout"
         android:icon="@drawable/baseline_power_settings_new_white_48dp"
-        android:title="@string/action_sign_out" />
+        android:title="@string/action_logout" />
+
+    <item
+        android:id="@+id/action_show_profile"
+        android:icon="@drawable/baseline_person_white_48dp"
+        android:title="@string/action_show_profile" />
 
     <item
         android:id="@+id/action_add_video"
         android:icon="@drawable/baseline_video_call_white_48dp"
-        android:title="@string/acion_add_video" />
+        android:title="@string/action_add_video" />
 
     <item
         android:id="@+id/action_add_image"
         android:icon="@drawable/baseline_add_photo_alternate_white_48dp"
-        android:title="@string/acion_add_image" />
+        android:title="@string/action_add_image" />
+
 
 </menu>
