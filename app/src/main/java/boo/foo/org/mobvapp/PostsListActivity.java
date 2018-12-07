@@ -3,7 +3,9 @@ package boo.foo.org.mobvapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 
 import boo.foo.org.mobvapp.models.Post;
 import boo.foo.org.mobvapp.models.User;
@@ -35,6 +37,10 @@ public class PostsListActivity extends AppCompatActivity {
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
+
+        // force to slide one post per slide
+        SnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(mRecyclerView);
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);

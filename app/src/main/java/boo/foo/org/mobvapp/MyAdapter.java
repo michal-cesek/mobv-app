@@ -1,11 +1,16 @@
 package boo.foo.org.mobvapp;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.ViewTarget;
 
 import boo.foo.org.mobvapp.models.Post;
 
@@ -17,7 +22,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView postItem;
+        public TextView postUser;
+        public TextView postDate;
+        public ImageView postContent;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -26,7 +33,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            postItem = (TextView) itemView.findViewById(R.id.post_item);
+            postUser = (TextView) itemView.findViewById(R.id.post_user);
+            postDate = (TextView) itemView.findViewById(R.id.post_date);
+            postContent = (ImageView) itemView.findViewById(R.id.post_content);
         }
     }
 
@@ -50,7 +59,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.postItem.setText(mDataset[position].getId());
+        holder.postUser.setText(mDataset[position].getUsername());
+        holder.postDate.setText(mDataset[position].getDate().toDate().toString());
+        if (mDataset[position].getType() == "image")
+        {
+            //holder.postContent.setima(mDataset[position].getImageurl());
+            String url = mDataset[position].getImageurl();
+//            Glide.with()
+//                    .load(url)
+//                    .into(holder.postContent);
+        }
+
 
     }
 
