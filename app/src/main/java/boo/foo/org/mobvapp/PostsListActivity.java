@@ -50,13 +50,14 @@ public class PostsListActivity extends AppCompatActivity {
         userService = new UserService(this);
         user = userService.getCurrentUser();
 
+        PostsListActivity context = this;
         // specify an adapter (see also next example)
         postsService = new PostsService();
         postsService.getPosts(user.id,
                 (posts) -> {
                     Post[] postsArray = new Post[posts.size()];
                     postsArray = posts.toArray(postsArray);
-                    mAdapter = new MyAdapter(postsArray);
+                    mAdapter = new MyAdapter(postsArray, context);
                     mRecyclerView.setAdapter(mAdapter);
 
                     //Log.d("ProfileActivity", String.valueOf(posts.size()));
