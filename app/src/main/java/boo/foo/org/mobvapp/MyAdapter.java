@@ -67,10 +67,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.postUser.setText(mDataset[position].getUsername() + " " + mDataset[position].getType());
-        holder.postDate.setText(mDataset[position].getDate().toDate().toString());
+
         Log.d(TAG, mDataset[position].getType());
-        if (mDataset[position].getType() == "image")
+        if (mDataset[position].getType().equals("image"))
         {
             //holder.postContent.setima(mDataset[position].getImageurl());
             String url = mDataset[position].getImageurl();
@@ -79,6 +78,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     .into(holder.postContent);
         }
 
+        holder.postUser.setText(mDataset[position].getUsername());
+        holder.postUser.bringToFront();
+        holder.postDate.setText(mDataset[position].getDate().toDate().toString());
+        holder.postDate.bringToFront();
 
     }
 

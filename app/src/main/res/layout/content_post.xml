@@ -5,22 +5,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:orientation="horizontal">
 
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/post_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/sd_fab_mini_size"
+        android:background="@color/sd_overlay_color"
         app:layout_constraintBottom_toTopOf="@id/post_date" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/post_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/sd_overlay_color"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <ImageView
@@ -31,6 +30,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
