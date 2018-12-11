@@ -1,12 +1,13 @@
 package boo.foo.org.mobvapp;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import boo.foo.org.mobvapp.models.User;
 import boo.foo.org.mobvapp.services.PostsService;
@@ -40,33 +41,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         User user = userService.getCurrentUser();
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy", Locale.UK);
+        String dateStr = simpleDateFormat.format(user.getDate().toDate());
+
         tv_username.setText(user.getUsername());
-        tv_registred.setText(user.getDate().toDate().toString());
-//        tv_post_count.setText(user.getNumberOfPosts());
-
-    }
-
-    private void onLoginSuccess(User user) {
-
-        postsService.getPosts(user.id,
-                (posts) -> {
-                    if (posts.size() < 1) {
-                        pb.setVisibility(View.INVISIBLE);
-                        return null;
-                    }
-                    Log.d("ProfileActivity", String.valueOf(posts.size()));
-                    return null;
-                }, (err) -> {
-                    return null;
-                }
-        );
-
-//        Post post = new Post();
-//        post.setUserid(user.getId());
-//        post.setUsername(user.getUsername());
-//        post.setType("image");
-//        post.setImageurl("https://picsum.photos/g/1600/1600?image=123");
-//            postsService.addPost(post, user);
+        tv_registred.setText(dateStr);
+        tv_post_count.setText(String.valueOf(user.getNumberOfPosts()));
     }
 
 

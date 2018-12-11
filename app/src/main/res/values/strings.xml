@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mobv app</string>
+    <string name="app_name">Feistagram</string>
     <string name="action_settings">Nastavenia</string>
     <string name="title_activity_login">Prihlásenie</string>
     <!-- Strings related to login -->
@@ -9,7 +9,7 @@
     <string name="prompt_password_repeat">Opakovať Heslo</string>
     <string name="action_sign_in">Prihlásiť sa</string>
     <string name="action_sign_in_u"><u>Prihlásiť sa</u></string>
-    <string name="action_sign_out">Odhlásiť sa</string>
+    <string name="action_logout">Odhlásiť sa</string>
     <string name="action_register">Registrovať sa</string>
     <string name="action_register_u"><u>Registrovať sa</u></string>
     <string name="error_invalid_username">Neplatná meno</string>
@@ -19,9 +19,11 @@
     <string name="error_field_required">Pole je povinné</string>
     <string name="error_password_dont_match">Heslá sa nezhodujú</string>
     <string name="error_not_supported_file_type">Nepodorovaný typ súboru</string>
-    <string name="acion_add_image">Pridať obrázok</string>
-    <string name="acion_add_video">Pridať video</string>
+    <string name="action_add_image">Pridať obrázok</string>
+    <string name="action_add_video">Pridať video</string>
+    <string name="action_show_profile">Môj profil</string>
     <string name="title_activity_main">Domov</string>
     <string name="title_activity_profile">Profil</string>
-    <string name="upload_service_path">http://mobv.mcomputing.eu/upload/index.php</string>
+    <string name="toast_post_add_success">Post bol úspešne vytvorený</string>
+    <string name="toast_post_add_fail">Nepodarilo sa vytvoriť post</string>
 </resources>
