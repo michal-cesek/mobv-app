@@ -2,7 +2,10 @@ package boo.foo.org.mobvapp;
 
 import android.webkit.MimeTypeMap;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Utils {
 
@@ -25,6 +28,12 @@ public class Utils {
 
     public static String getMediaFileUrl(String filename) {
         return "http://mobv.mcomputing.eu/upload/v/" + filename;
+    }
+
+
+    public static String getFormatedDate(String format, Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.UK);
+        return simpleDateFormat.format(date);
     }
 
 

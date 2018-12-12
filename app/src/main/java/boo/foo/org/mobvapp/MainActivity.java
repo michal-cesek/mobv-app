@@ -33,8 +33,6 @@ import boo.foo.org.mobvapp.models.Post;
 import boo.foo.org.mobvapp.services.PostsService;
 import boo.foo.org.mobvapp.services.UserService;
 
-import static com.crashlytics.android.core.CrashlyticsCore.TAG;
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity:";
 
@@ -324,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private class CustomLinearLayoutManager extends LinearLayoutManager {
 
         public CustomLinearLayoutManager(Context context) {
@@ -363,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // This get called in PrimaryAdapter onBindViewHolder method
-        public void bindViews( String userId) {
+        public void bindViews(String userId) {
 
             // create vertical layout manager
             vLayoutManager = new MainActivity.CustomLinearLayoutManager(context);
@@ -387,6 +384,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     private class PrimaryAdapter extends RecyclerView.Adapter<MainActivity.PrimaryViewHolder> {
         private Post[] mDataset;
 
@@ -473,8 +471,7 @@ public class MainActivity extends AppCompatActivity {
             // - replace the contents of the view with that element
 
             Log.d(TAG, mDataset[position].getType());
-            if (mDataset[position].getType().equals("image"))
-            {
+            if (mDataset[position].getType().equals("image")) {
                 String url = mDataset[position].getImageurl();
                 Glide.with(postContext.getApplicationContext())
                         .load(url)
@@ -482,9 +479,11 @@ public class MainActivity extends AppCompatActivity {
             }
             //TODO: elseif video by exoplayer
 
+            String dateStr = Utils.getFormatedDate("MM-dd-yyyy HH:MM",mDataset[position].getDate().toDate());
+
             holder.postUser.setText(mDataset[position].getUsername());
             holder.postUser.bringToFront();
-            holder.postDate.setText(mDataset[position].getDate().toDate().toString());
+            holder.postDate.setText(dateStr);
             holder.postDate.bringToFront();
         }
 

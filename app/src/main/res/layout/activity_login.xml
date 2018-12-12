@@ -221,8 +221,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:background="@color/colorAccent"
                     android:padding="18dp"
                     android:text="@string/action_register"
+                    android:textColor="@color/common_google_signin_btn_text_dark_default"
                     android:textStyle="bold" />
 
                 <Button
