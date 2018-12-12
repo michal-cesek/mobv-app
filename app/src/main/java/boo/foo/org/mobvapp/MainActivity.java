@@ -390,23 +390,6 @@ public class MainActivity extends AppCompatActivity {
                     }
             );
 
-//            postsService.getPosts(post.getUserid(),
-//                    (posts) -> {
-//                        Post[] postsArray = new Post[posts.size() + 1];
-//                        posts.add(0, post);
-//                        postsArray = posts.toArray(postsArray);
-//
-//                        sAdapter = new MainActivity.SecondaryAdapter(context, postsArray, );
-//                        sRecyclerView.setAdapter(sAdapter);
-//                        sRecyclerView.scrollToPosition(1);
-//
-//                        //Log.d("ProfileActivity", String.valueOf(posts.size()));
-//                        return null;
-//                    }, (err) -> {
-//                        return null;
-//                    }
-//            );
-
         }
 
     }
@@ -446,9 +429,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //TODO: tu chceme viewholder pre profile
     private class ProfileViewHolder extends RecyclerView.ViewHolder {
-
+        public TextView tv_username;
+        public TextView tv_registred;
+        public TextView tv_post_count;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -456,21 +440,27 @@ public class MainActivity extends AppCompatActivity {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
+
+            tv_username = (TextView) itemView.findViewById(R.id.tv_username);
+            tv_registred = (TextView) itemView.findViewById(R.id.tv_registred);
+            tv_post_count = (TextView) itemView.findViewById(R.id.tv_post_count);
         }
 
         public void populate(User data){
+            String dateStr = Utils.getFormatedDate("MM-dd-yyyy",data.getDate().toDate());
 
+            tv_username.setText(data.getUsername());
+            tv_registred.setText(dateStr);
+            tv_post_count.setText(String.valueOf(data.getNumberOfPosts()));
         }
     }
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     private class PostViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public TextView postUser;
         public TextView postDate;
         public ImageView postContent;
-
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -478,7 +468,6 @@ public class MainActivity extends AppCompatActivity {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-
 
             postUser = (TextView) itemView.findViewById(R.id.post_user);
             postDate = (TextView) itemView.findViewById(R.id.post_date);
@@ -519,7 +508,6 @@ public class MainActivity extends AppCompatActivity {
             postContext = context;
         }
 
-
         // Create new views (invoked by the layout manager)
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -547,11 +535,6 @@ public class MainActivity extends AppCompatActivity {
             if(holder instanceof PostViewHolder){
                 ((PostViewHolder) holder).populate(pDataset[position - uDataset.length]);
             }
-
-
-
-            //Log.d(TAG, pDataset[position].getType());
-
         }
 
         // Return the size of your dataset (invoked by the layout manager)
