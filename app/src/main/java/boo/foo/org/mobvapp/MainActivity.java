@@ -28,6 +28,7 @@ import com.leinardi.android.speeddial.SpeedDialView;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import boo.foo.org.mobvapp.models.Post;
 import boo.foo.org.mobvapp.models.User;
@@ -371,14 +372,17 @@ public class MainActivity extends AppCompatActivity {
 
             userService.getUseRecordById(post.getUserid(),
                     (u) -> {
-                        posts.stream().filter( p -> p.getUserid().equals(post.getUserid()));
-                        posts.add(0, post);
+                        User us = (User) u.get(0);
 
-                        Post[] postsArray = new Post[posts.size()];
-                        postsArray = posts.toArray(postsArray);
+                        List<Post> postsFiltered = posts.stream().filter(p -> p.getUserid().equals(post.getUserid())).collect(Collectors.toList());
+                        postsFiltered.add(0, post);
 
-                        User[] usersArray = new User[u.size()];
-                        usersArray = u.toArray(usersArray);
+                        Post[] postsArray = new Post[postsFiltered.size()];
+                        postsArray = postsFiltered.toArray(postsArray);
+
+
+                        User[] usersArray = new User[1];
+                        usersArray[0] = us;
 
                         sAdapter = new MainActivity.SecondaryAdapter(context, postsArray, usersArray);
                         sRecyclerView.setAdapter(sAdapter);
