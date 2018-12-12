@@ -37,8 +37,10 @@ import com.leinardi.android.speeddial.SpeedDialView;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import boo.foo.org.mobvapp.models.Post;
+import boo.foo.org.mobvapp.models.User;
 import boo.foo.org.mobvapp.services.PostsService;
 import boo.foo.org.mobvapp.services.UserService;
 
@@ -386,17 +388,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // This get called in PrimaryAdapter onBindViewHolder method
-        public void bindViews( String userId) {
+        public void bindViews(Post post) {
+            User user;
 
             // create vertical layout manager
             vLayoutManager = new MainActivity.CustomLinearLayoutManager(context);
 
             sRecyclerView.setLayoutManager(vLayoutManager);
-            postsService.getPosts(userId,
-                    (posts) -> {
-                        Post[] postsArray = new Post[posts.size()];
-                        postsArray = posts.toArray(postsArray);
-                        sAdapter = new MainActivity.SecondaryAdapter(postsArray, context);
+
+            userService.getUseRecordById(post.getUserid(),
+                    (u) -> {
+                        User us = (User) u.get(0);
+
+                        List<Post> postsFiltered = posts.stream().filter(p -> p.getUserid().equals(post.getUserid())).collect(Collectors.toList());
+                        postsFiltered.add(0, post);
+
+                        Post[] postsArray = new Post[postsFiltered.size()];
+                        postsArray = postsFiltered.toArray(postsArray);
+
+
+                        User[] usersArray = new User[1];
+                        usersArray[0] = us;
+
+                        sAdapter = new MainActivity.SecondaryAdapter(context, postsArray, usersArray);
                         sRecyclerView.setAdapter(sAdapter);
                         sRecyclerView.scrollToPosition(1);
 
@@ -421,6 +435,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     private class PrimaryAdapter extends RecyclerView.Adapter<MainActivity.PrimaryViewHolder> {
         private Post[] mDataset;
 
@@ -445,8 +460,8 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(MainActivity.PrimaryViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            String userId = mDataset[position].getUserid();
-            holder.bindViews(userId);
+            //String userId = mDataset[position].getUserid();
+            holder.bindViews(mDataset[position]);
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -456,12 +471,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //TODO: tu chceme viewholder pre profile
+    private class ProfileViewHolder extends RecyclerView.ViewHolder {
+        public TextView tv_username;
+        public TextView tv_registred;
+        public TextView tv_post_count;
+
+        // We also create a constructor that accepts the entire item row
+        // and does the view lookups to find each subview
+        public ProfileViewHolder(View itemView) {
+            // Stores the itemView in a public final member variable that can be used
+            // to access the context from any ViewHolder instance.
+            super(itemView);
+
+            tv_username = (TextView) itemView.findViewById(R.id.tv_username);
+            tv_registred = (TextView) itemView.findViewById(R.id.tv_registred);
+            tv_post_count = (TextView) itemView.findViewById(R.id.tv_post_count);
+        }
+
+        public void populate(User data){
+            String dateStr = Utils.getFormatedDate("MM-dd-yyyy",data.getDate().toDate());
+
+            tv_username.setText(data.getUsername());
+            tv_registred.setText(dateStr);
+            tv_post_count.setText(String.valueOf(data.getNumberOfPosts()));
+        }
+    }
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    private class SecondaryViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+    private class PostViewHolder extends RecyclerView.ViewHolder {
         public TextView postUser;
         public TextView postDate;
         public ImageView postContent;
@@ -469,48 +507,87 @@ public class MainActivity extends AppCompatActivity {
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
-        public SecondaryViewHolder(View itemView) {
+        public PostViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
+
 
             postUser = (TextView) itemView.findViewById(R.id.post_user);
             postDate = (TextView) itemView.findViewById(R.id.post_date);
             postContent = (ImageView) itemView.findViewById(R.id.post_content);
             postContentVideo = (PlayerView) itemView.findViewById(R.id.post_content_video);
         }
+
+        public void populate(Post data){
+
+            if (data.getType().equals("image")) {
+                String url = data.getImageurl();
+                Glide.with(context.getApplicationContext())
+                        .load(url)
+                        .into(postContent);
+            }
+            //TODO: elseif video by exoplayer
+
+            String dateStr = Utils.getFormatedDate("MM-dd-yyyy HH:mm",data.getDate().toDate());
+
+            postUser.setText(data.getUsername());
+            postUser.bringToFront();
+            postDate.setText(dateStr);
+            postDate.bringToFront();
+        }
     }
 
-    private class SecondaryAdapter extends RecyclerView.Adapter<MainActivity.SecondaryViewHolder> {
-        private Post[] mDataset;
+    private class SecondaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        final int VIEW_TYPE_PROFILE = 0;
+        final int VIEW_TYPE_MEDIA = 1;
+
+        private User[] uDataset;
+        private Post[] pDataset;
         private Context postContext;
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public SecondaryAdapter(Post[] post, Context context) {
-            mDataset = post;
+        public SecondaryAdapter(Context context, Post[] post, User[] user) {
+            pDataset = post;
+            uDataset = user;
             postContext = context;
         }
 
+
         // Create new views (invoked by the layout manager)
         @Override
-        public MainActivity.SecondaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            // create a new view
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_post, parent, false);
-            return new MainActivity.SecondaryViewHolder(v);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            if(viewType == VIEW_TYPE_PROFILE){
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_profile, parent, false);
+                return new ProfileViewHolder(v);
+            }
+
+            if(viewType == VIEW_TYPE_MEDIA){
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_post, parent, false);
+                return new PostViewHolder(v);
+            }
+
+            return null;
         }
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(MainActivity.SecondaryViewHolder holder, int position) {
-            // - get element from your dataset at this position
-            // - replace the contents of the view with that element
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if(holder instanceof ProfileViewHolder){
+                ((ProfileViewHolder) holder).populate(uDataset[position]);
+            }
 
-            Log.d(TAG, mDataset[position].getType());
-            if (mDataset[position].getType().equals("image"))
+            if(holder instanceof PostViewHolder){
+                ((PostViewHolder) holder).populate(pDataset[position - uDataset.length]);
+            }
+
+            Log.d(TAG, pDataset[position].getType());
+            if (pDataset[position].getType().equals("image"))
             {
                 player.stop();
 
-                String url = mDataset[position].getImageurl();
+                String url = pDataset[position].getImageurl();
                 Glide.with(postContext.getApplicationContext())
                         .load(url)
                         .into(holder.postContent);
@@ -518,11 +595,11 @@ public class MainActivity extends AppCompatActivity {
                 holder.postContentVideo.setVisibility(View.INVISIBLE);
 
 
-            } else if (mDataset[position].getType().equals("video"))
+            } else if (pDataset[position].getType().equals("video"))
             {
                 //player = ExoPlayerFactory.newSimpleInstance(context);
                 // This is the MediaSource representing the media to be played.
-                String url = mDataset[position].getVideourl();
+                String url = pDataset[position].getVideourl();
                 Uri uri = Uri.parse(url);
 
                 MediaSource mediaSource = buildMediaSource(uri);
@@ -536,10 +613,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            holder.postUser.setText(mDataset[position].getUsername());
-            holder.postUser.bringToFront();
-            holder.postDate.setText(mDataset[position].getDate().toDate().toString());
-            holder.postDate.bringToFront();
         }
         private MediaSource buildMediaSource(Uri uri) {
             return new ExtractorMediaSource.Factory(
@@ -550,11 +623,24 @@ public class MainActivity extends AppCompatActivity {
         // Return the size of your dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {
-            return mDataset.length;
+            return pDataset.length + uDataset.length;
+        }
+
+        @Override
+        public int getItemViewType(int position){
+            if(position < uDataset.length){
+                return VIEW_TYPE_PROFILE;
+            }
+
+            if(position - uDataset.length < pDataset.length){
+                return VIEW_TYPE_MEDIA;
+            }
+
+            return -1;
         }
 
 
     }
 
-    
+
 }

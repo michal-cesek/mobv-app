@@ -6,9 +6,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import boo.foo.org.mobvapp.models.User;
 import boo.foo.org.mobvapp.services.PostsService;
 import boo.foo.org.mobvapp.services.UserService;
@@ -40,9 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
         postsService = new PostsService();
 
         User user = userService.getCurrentUser();
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy", Locale.UK);
-        String dateStr = simpleDateFormat.format(user.getDate().toDate());
+        String dateStr = Utils.getFormatedDate("MM-dd-yyyy",user.getDate().toDate());
 
         tv_username.setText(user.getUsername());
         tv_registred.setText(dateStr);

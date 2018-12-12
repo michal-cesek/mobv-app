@@ -13,6 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/sd_overlay_color"
+        android:paddingLeft="12dp"
+        android:paddingTop="8dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="4dp"
+        android:text="User Name"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/post_date" />
 
     <android.support.v7.widget.AppCompatTextView
@@ -20,6 +27,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/sd_overlay_color"
+        android:paddingLeft="12dp"
+        android:paddingTop="0dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="8dp"
+        android:text="23-06-2018"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <ImageView
