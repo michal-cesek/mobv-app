@@ -190,7 +190,7 @@ public class UserService {
                 });
     }
 
-    private void getUseRecordById(
+    public void getUseRecordById(
             String userId,
             Function<List<Object>, Void> onResolved,
             Function<String, Void> onFail
