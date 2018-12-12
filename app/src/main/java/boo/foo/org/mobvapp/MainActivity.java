@@ -467,16 +467,12 @@ public class MainActivity extends AppCompatActivity {
         public ImageView postContent;
         public PlayerView postContentVideo;
 
-
-
-
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public SecondaryViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-
 
             postUser = (TextView) itemView.findViewById(R.id.post_user);
             postDate = (TextView) itemView.findViewById(R.id.post_date);
@@ -494,7 +490,6 @@ public class MainActivity extends AppCompatActivity {
             mDataset = post;
             postContext = context;
         }
-
 
         // Create new views (invoked by the layout manager)
         @Override
@@ -519,6 +514,7 @@ public class MainActivity extends AppCompatActivity {
                         .into(holder.postContent);
                 holder.postContent.setVisibility(View.VISIBLE);
                 holder.postContentVideo.setVisibility(View.INVISIBLE);
+                player.stop();
 
             } else if (mDataset[position].getType().equals("video"))
             {
@@ -530,13 +526,14 @@ public class MainActivity extends AppCompatActivity {
                 MediaSource mediaSource = buildMediaSource(uri);
                 // Prepare the player with the source.
                 player.prepare(mediaSource);
+                player.setPlayWhenReady(true);
 
                 holder.postContentVideo.setPlayer(player);
 
                 holder.postContentVideo.setVisibility(View.VISIBLE);
                 holder.postContent.setVisibility(View.INVISIBLE);
-            }
 
+            }
 
             holder.postUser.setText(mDataset[position].getUsername());
             holder.postUser.bringToFront();
