@@ -508,13 +508,15 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, mDataset[position].getType());
             if (mDataset[position].getType().equals("image"))
             {
+                player.stop();
+
                 String url = mDataset[position].getImageurl();
                 Glide.with(postContext.getApplicationContext())
                         .load(url)
                         .into(holder.postContent);
                 holder.postContent.setVisibility(View.VISIBLE);
                 holder.postContentVideo.setVisibility(View.INVISIBLE);
-                player.stop();
+
 
             } else if (mDataset[position].getType().equals("video"))
             {
@@ -526,7 +528,6 @@ public class MainActivity extends AppCompatActivity {
                 MediaSource mediaSource = buildMediaSource(uri);
                 // Prepare the player with the source.
                 player.prepare(mediaSource);
-                player.setPlayWhenReady(true);
 
                 holder.postContentVideo.setPlayer(player);
 
