@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +25,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.erikagtierrez.multiple_media_picker.Gallery;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.io.File;
@@ -34,6 +43,8 @@ import boo.foo.org.mobvapp.models.Post;
 import boo.foo.org.mobvapp.models.User;
 import boo.foo.org.mobvapp.services.PostsService;
 import boo.foo.org.mobvapp.services.UserService;
+
+import static com.crashlytics.android.core.CrashlyticsCore.TAG;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity:";
@@ -60,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager hLayoutManager;
     private RecyclerView.LayoutManager vLayoutManager;
     private MainActivity context;
+    private SimpleExoPlayer player;
+
 
     @Override
     public void onStart() {
@@ -98,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
 
         pRecyclerView = (RecyclerView) findViewById(R.id.primary_recycle_view);
 
+        player = ExoPlayerFactory.newSimpleInstance(context);
+
+
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         pRecyclerView.setHasFixedSize(true);
@@ -109,6 +125,15 @@ public class MainActivity extends AppCompatActivity {
         // use a linear layout manager
         hLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         pRecyclerView.setLayoutManager(hLayoutManager);
+        pRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                player.seekTo(0);
+                player.setPlayWhenReady(true);
+            }
+        });
 
     }
 
@@ -324,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     private class CustomLinearLayoutManager extends LinearLayoutManager {
 
         public CustomLinearLayoutManager(Context context) {
@@ -388,11 +414,23 @@ public class MainActivity extends AppCompatActivity {
                         sRecyclerView.setAdapter(sAdapter);
                         sRecyclerView.scrollToPosition(1);
 
+                        //Log.d("ProfileActivity", String.valueOf(posts.size()));
                         return null;
                     }, (err) -> {
                         return null;
                     }
             );
+
+            sRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    player.seekTo(0);
+                    player.setPlayWhenReady(true);
+
+                }
+            });
 
         }
 
@@ -465,6 +503,7 @@ public class MainActivity extends AppCompatActivity {
         public TextView postUser;
         public TextView postDate;
         public ImageView postContent;
+        public PlayerView postContentVideo;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -473,9 +512,11 @@ public class MainActivity extends AppCompatActivity {
             // to access the context from any ViewHolder instance.
             super(itemView);
 
+
             postUser = (TextView) itemView.findViewById(R.id.post_user);
             postDate = (TextView) itemView.findViewById(R.id.post_date);
             postContent = (ImageView) itemView.findViewById(R.id.post_content);
+            postContentVideo = (PlayerView) itemView.findViewById(R.id.post_content_video);
         }
 
         public void populate(Post data){
@@ -512,6 +553,7 @@ public class MainActivity extends AppCompatActivity {
             postContext = context;
         }
 
+
         // Create new views (invoked by the layout manager)
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -539,6 +581,43 @@ public class MainActivity extends AppCompatActivity {
             if(holder instanceof PostViewHolder){
                 ((PostViewHolder) holder).populate(pDataset[position - uDataset.length]);
             }
+
+            Log.d(TAG, pDataset[position].getType());
+            if (pDataset[position].getType().equals("image"))
+            {
+                player.stop();
+
+                String url = pDataset[position].getImageurl();
+                Glide.with(postContext.getApplicationContext())
+                        .load(url)
+                        .into(holder.postContent);
+                holder.postContent.setVisibility(View.VISIBLE);
+                holder.postContentVideo.setVisibility(View.INVISIBLE);
+
+
+            } else if (pDataset[position].getType().equals("video"))
+            {
+                //player = ExoPlayerFactory.newSimpleInstance(context);
+                // This is the MediaSource representing the media to be played.
+                String url = pDataset[position].getVideourl();
+                Uri uri = Uri.parse(url);
+
+                MediaSource mediaSource = buildMediaSource(uri);
+                // Prepare the player with the source.
+                player.prepare(mediaSource);
+
+                holder.postContentVideo.setPlayer(player);
+
+                holder.postContentVideo.setVisibility(View.VISIBLE);
+                holder.postContent.setVisibility(View.INVISIBLE);
+
+            }
+
+        }
+        private MediaSource buildMediaSource(Uri uri) {
+            return new ExtractorMediaSource.Factory(
+                    new DefaultHttpDataSourceFactory("exoplayer-codelab")).
+                    createMediaSource(uri);
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -559,5 +638,9 @@ public class MainActivity extends AppCompatActivity {
 
             return -1;
         }
+
+
     }
+
+
 }

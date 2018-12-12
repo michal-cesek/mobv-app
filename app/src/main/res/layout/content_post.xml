@@ -37,6 +37,7 @@
 
     <ImageView
         android:id="@+id/post_content"
+        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@android:color/background_light"
@@ -44,5 +45,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/post_content_video"
+        app:resize_mode="fit"
+        app:surface_type="surface_view"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" >
+
+    </com.google.android.exoplayer2.ui.PlayerView>
 
 </android.support.constraint.ConstraintLayout>
