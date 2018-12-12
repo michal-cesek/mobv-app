@@ -112,6 +112,7 @@ public class PostsService {
     ) {
         db.collection(Post.collectionName)
                 .whereEqualTo("userid", userId)
+                .orderBy("date", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

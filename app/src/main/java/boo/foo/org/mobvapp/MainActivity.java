@@ -479,7 +479,7 @@ public class MainActivity extends AppCompatActivity {
             }
             //TODO: elseif video by exoplayer
 
-            String dateStr = Utils.getFormatedDate("MM-dd-yyyy HH:MM",mDataset[position].getDate().toDate());
+            String dateStr = Utils.getFormatedDate("MM-dd-yyyy HH:mm",mDataset[position].getDate().toDate());
 
             holder.postUser.setText(mDataset[position].getUsername());
             holder.postUser.bringToFront();
