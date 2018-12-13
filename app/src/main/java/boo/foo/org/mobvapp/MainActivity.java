@@ -149,6 +149,12 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.toast_post_add_success),
                             Toast.LENGTH_LONG)
                             .show();
+
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
+
                     return null;
                 },
                 err -> {
