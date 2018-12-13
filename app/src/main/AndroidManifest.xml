@@ -32,12 +32,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ProfileActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
     </application>
 
 </manifest>

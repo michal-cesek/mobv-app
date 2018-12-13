@@ -316,10 +316,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.action_logout:
                     logout();
                     return false;
-                case R.id.action_show_profile:
-                    Intent intent = new Intent(this, ProfileActivity.class);
-                    startActivity(intent);
-                    return false;
                 case R.id.action_add_video:
                     tryOpenMediaPicker(3, OPEN_VIDEO_PICKER);
                     return false;
@@ -347,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         return;
     }
+
 
 
     private class CustomLinearLayoutManager extends LinearLayoutManager {

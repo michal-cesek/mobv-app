@@ -28,10 +28,20 @@
             android:paddingLeft="40dp"
             android:paddingTop="40dp"
             android:paddingRight="40dp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="30dp"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            tools:text="@tools:sample/full_names" />
+
+        <TextView
+            android:id="@+id/tv_registred2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
             android:textAlignment="center"
             android:textSize="18sp"
-            tools:text="@tools:sample/full_names" />
+            android:visibility="visible"
+            tools:text="Registred on:" />
 
         <TextView
             android:id="@+id/tv_registred"
@@ -39,17 +49,30 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textAlignment="center"
-            android:textSize="12sp"
+            android:textSize="24sp"
             tools:text="@tools:sample/date/ddmmyy" />
+
+        <TextView
+            android:id="@+id/tv_post_count2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="38dp"
+            android:paddingTop="38dp"
+            android:paddingRight="38dp"
+            android:paddingBottom="14dp"
+            android:text="Posts:"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_post_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="48dp"
+            android:padding="2dp"
             android:text="10 posts"
             android:textAlignment="center"
-            android:textSize="30sp" />
+            android:textSize="46sp" />
 
     </LinearLayout>
 
