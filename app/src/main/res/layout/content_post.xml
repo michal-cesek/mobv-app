@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/sd_overlay_color"
-        android:paddingLeft="12dp"
+        android:paddingLeft="24dp"
         android:paddingTop="8dp"
-        android:paddingRight="12dp"
+        android:paddingRight="24dp"
         android:paddingBottom="4dp"
         android:text="User Name"
         android:textSize="16sp"
@@ -27,9 +27,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/sd_overlay_color"
-        android:paddingLeft="12dp"
+        android:paddingLeft="24dp"
         android:paddingTop="0dp"
-        android:paddingRight="12dp"
+        android:paddingRight="24dp"
         android:paddingBottom="8dp"
         android:text="23-06-2018"
         android:textSize="12sp"
@@ -37,14 +37,14 @@
 
     <ImageView
         android:id="@+id/post_content"
-        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:color/background_light"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/background_dark" />
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/post_content_video"
